@@ -1,20 +1,19 @@
 <?php
-include './Partial/header.php';
-  
-  // On enregistre notre autoload.
+// Autoloader.
 
-include './config/Autoloader.php';
+  include './config/Autoloader.php';
 
-
-
-  // On fait appel à la connexion à la bdd
+  // connexion à la DB
   require 'config/init.php';
 
-  // On fait appel à le code métier
+  // Code métier
   require 'combat.php';
+  
+  
+  //Header Page
+  include './Partial/header.php';
 ?>
 
-    <p>Nombre de personnages créés : <?= $manager->count() ?></p>
 <?php
 
   // On a un message à afficher ?
@@ -25,22 +24,46 @@ include './config/Autoloader.php';
   if (isset($perso)) {
 
 ?>
-<div class='ml-4'>
-    <p ><a href="?deconnexion=1">Déconnexion</a></p>
+<div class='p-5'>
     
-    <fieldset >
+    <fieldset class='p-5'>
+
       <legend>Mes informations</legend>
-      <p>
-        Nom : <?= htmlspecialchars($perso->nom()) ?><br />
-        Type : <?= htmlspecialchars($perso->type()) ?><br />
-        Dégâts : <?= $perso->degats() ?><br />
-        niveau : <?= $perso->niveau() ?><br />
-        experience : <?= $perso->experience() ?><br />
-        force : <?= $perso->strength() ?><br />
+
+      <div class ="card mx-5 text-white text-center bg-secondary p-3">
+      
+        <h4>
+          Nom : <?= htmlspecialchars($perso->nom()) ?>
+        </h4>
+        <br>
+        <h5>
+          Type : <?= htmlspecialchars($perso->type()) ?>
+        </h5>
+        <br>
+         <hr>
+        <p>
+          Dégâts : <?= $perso->degats() ?>
+          /
+          Niveau : <?= $perso->niveau() ?>
+          /
+          Experience : <?= $perso->experience() ?>
+          /
+          Force : <?= $perso->strength() ?>
+          <br >
+        </p>
+      </div>
+
+      <p class ='ml-5 mt-4'>
+        <button class="btn btn-danger"> 
+          <a href="?deconnexion=1"> 
+            Déconnexion 
+          </a>
+        </button>
       </p>
+    
     </fieldset>
     
-    <fieldset >
+    <fieldset class='p-5'>
       <legend>Qui frapper ?</legend>
       <p>
         <?php
@@ -51,24 +74,40 @@ include './config/Autoloader.php';
           else {
             foreach ($persos as $unPerso)
             {    
-            if ($unPerso->type() == "Guerrier") {
-              $bgCard = "bg-danger";
-            }elseif ($unPerso->type() == "Archer"){
-              $bgCard = "bg-warning";
-            }else {
-              $bgCard = "bg-info";
-            }
-              echo '
-              <div class ="card m-5 text-center shadow p-3 mb-5 rounded '.$bgCard.'">',
+              if ($unPerso->type() == "Guerrier") {
+                $bgCard = "bg-danger";
+              }elseif ($unPerso->type() == "Archer"){
+                $bgCard = "bg-warning";
+              }else {
+                $bgCard = "bg-info";
+              }
+            ?>
               
-              '<h5>',htmlspecialchars($unPerso->nom()),'</h5>', '<br />',
-              '<h6>',$unPerso->type(),'</h6>', '<br />',
-              '(dégâts : ', $unPerso->degats(), '
-              niveau : ', $unPerso->niveau(), '
-              experience : ', $unPerso->experience(), '
-              force : ', $unPerso->strength(), ')<br />', '<br />',
-              '<a href="?frapper=',$unPerso->id(), '">', '<button>Attack</button>','</a>',
-              '</div>';
+              <div id="divList" class ="card mx-5 mb-5 text-center p-3 <?= $bgCard ?>">
+                <a href="?frapper=<?= $unPerso->id() ?>">
+                  <h4>
+                    <?=htmlspecialchars($unPerso->nom())?>
+                  </h4>
+                  <br>
+                  <h5>
+                    <?= $unPerso->type()?>
+                  </h5>
+                  <br>
+                   <hr> 
+                  <p>
+                    Dégâts :  <?=$unPerso->degats()?>
+                     / 
+                     Niveau :  <?=$unPerso->niveau()?>
+                     /
+                     Experience : <?=$unPerso->experience()?>
+                     / 
+                     Force :  <?=$unPerso->strength()?>
+                    <br>
+                  <p>
+                </a>
+              </div>
+
+            <?php
             }
           }
         ?>
@@ -113,7 +152,7 @@ else {
 <?php } ?>
 
 <?php
-include './config/DebugInfo.php';
+//include './config/DebugInfo.php';
 include './Partial/footer.php';
   // Si on a créé un personnage, on le stocke dans une variable session afin d'économiser une requête SQL.
   if (isset($perso)) {

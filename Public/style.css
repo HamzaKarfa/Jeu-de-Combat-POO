@@ -1,0 +1,18 @@
+
+#divList{
+    box-shadow: 0px 0px 35px rgba(0, 0, 0, 0);
+    transition-duration: 0.3s;
+}
+a {
+    color: white;
+}
+a:hover {
+    color: white;
+    text-decoration: none;
+    
+}
+
+#divList:hover{
+    box-shadow: 0px 0px 8px white;
+    scale: 1.05;
+}
