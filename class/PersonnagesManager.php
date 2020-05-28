@@ -59,9 +59,12 @@ class PersonnagesManager
 
       switch ($donnees['type'])
       {
-        case 'Guerrier': return new Guerrier($donnees); break;
-        case 'Magicien': return new Magicien($donnees); break;
-        case 'Archer': return new Archer($donnees); break;
+        case 'Guerrier': return new Guerrier($donnees); 
+          break;
+        case 'Magicien': return new Magicien($donnees); 
+          break;
+        case 'Archer': return new Archer($donnees); 
+          break;
       }
 
     }
@@ -81,30 +84,28 @@ class PersonnagesManager
     }
   }
   
-
   public function getList($nom)
   {
+
     $persos = [];
-    
+
     $q = $this->db->prepare('SELECT id, nom, degats, niveau, experience, strength, type FROM personnages WHERE nom <> :nom ORDER BY nom');
     $q->execute([':nom' => $nom]);
-    
-    while ($donnees = $q->fetch(PDO::FETCH_ASSOC))
-    {
+    $donnees = $q->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($donnees as $donnee) {
 
-      switch ($donnees['type'])
-        {
-          case 'Guerrier': $persos[] = new Guerrier($donnees); break;
-          case 'Magicien': $persos[] = new Magicien($donnees); break;
-          case 'Archer': $persos[] = new Archer($donnees); break;
-        }
-
+      switch ($donnee['type'])
+      {
+        case 'Guerrier': array_push ($persos, new Guerrier($donnee)); break;
+        case 'Magicien': array_push ($persos, new Magicien($donnee)); break;
+        case 'Archer':array_push ($persos, new Archer($donnee)); break;
+      }
     }
-    
+
     return $persos;
+
   }
-  
-  public function update(Personnage $perso, $strength = 0)
+  public function update(Personnage $perso)
   {
     if($perso->experience() >= 100){
       $perso->setExperience(0);
@@ -114,7 +115,7 @@ class PersonnagesManager
     $q = $this->db->prepare('UPDATE personnages SET degats = :degats, niveau = :niveau, experience = :experience, strength = :strength WHERE id = :id');
     
 
-    $q->bindValue(':degats', $perso->degats() + $strength, PDO::PARAM_INT);
+    $q->bindValue(':degats', $perso->degats(), PDO::PARAM_INT);
     $q->bindValue(':id', $perso->id(), PDO::PARAM_INT);
     $q->bindValue(':niveau', $perso->niveau(), PDO::PARAM_INT);
     $q->bindValue(':experience', $perso->experience(), PDO::PARAM_INT);

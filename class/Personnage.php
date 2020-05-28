@@ -34,7 +34,9 @@ abstract class Personnage
     }
   
   abstract public function frapper(Personnage $perso);
+
   abstract public function recevoirDegats($type, $force);
+  
   protected function Attaque(Personnage $perso)
     {
         return $perso->recevoirDegats($this->type , $this->strength);
